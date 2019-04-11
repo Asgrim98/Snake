@@ -10,7 +10,7 @@ public class Board extends JPanel implements ActionListener, Cloneable {
 
     private final int X_SIZE = 500;
     private final int Y_SIZE = 500;
-    private final int DELAY = 150;
+    private final int DELAY = 50;
     private final int SIZE = 10;
 
     private boolean up = false;
@@ -79,6 +79,7 @@ public class Board extends JPanel implements ActionListener, Cloneable {
 
         if (isPointSpawned == false) spawnPoint();
         snakeMove();
+        checkIfPointIsTaken();
         repaint();
     }
 
@@ -96,6 +97,16 @@ public class Board extends JPanel implements ActionListener, Cloneable {
         Toolkit.getDefaultToolkit().sync();
 
 
+    }
+
+    public void checkIfPointIsTaken() {
+
+        if( bodyPoz.get(0).getX() == pointPoz.getX()
+            && bodyPoz.get(0).getY() == pointPoz.getY() ){
+
+                isPointSpawned = false;
+                bodyPoz.add( new Position( 700, 700) );
+        }
     }
 
     public void snakeMove() {

@@ -10,13 +10,17 @@ public class Board extends JPanel implements ActionListener, Cloneable {
 
     private final int X_SIZE = 500;
     private final int Y_SIZE = 500;
-    private final int DELAY = 50;
+    private final int DELAY = 140;
     private final int SIZE = 10;
 
     private boolean up = false;
     private boolean down = false;
     private boolean right = true;
     private boolean left = false;
+
+    private Integer points = 0;
+
+    private boolean gameOver = false;
 
     private Boolean isPointSpawned = false;
 
@@ -26,7 +30,6 @@ public class Board extends JPanel implements ActionListener, Cloneable {
 
     private Timer timer;
 
-    private Image head;
     private Image point;
     private Image body;
 
@@ -55,8 +58,6 @@ public class Board extends JPanel implements ActionListener, Cloneable {
         ImageIcon body = new ImageIcon("src/images/body.jpg");
         this.body = body.getImage();
 
-        ImageIcon head = new ImageIcon("src/images/head.jpg");
-        this.head = head.getImage();
 
         ImageIcon point = new ImageIcon("src/images/point.jpg");
         this.point = point.getImage();
@@ -78,6 +79,7 @@ public class Board extends JPanel implements ActionListener, Cloneable {
 
 
         if (isPointSpawned == false) spawnPoint();
+        checkColision();
         snakeMove();
         checkIfPointIsTaken();
         repaint();
@@ -87,16 +89,34 @@ public class Board extends JPanel implements ActionListener, Cloneable {
 
         super.paintComponent(g);
 
-        g.drawImage(point, pointPoz.getX(), pointPoz.getY(), this);
+        if( gameOver ) gameOver( g );
 
-        for (Position p : bodyPoz) {
+        else {
 
-            g.drawImage(body, p.getX(), p.getY(), this);
+
+            g.drawImage(point, pointPoz.getX(), pointPoz.getY(), this);
+
+            for (Position p : bodyPoz) {
+
+                g.drawImage(body, p.getX(), p.getY(), this);
+            }
+
+            Toolkit.getDefaultToolkit().sync();
+
         }
+    }
 
-        Toolkit.getDefaultToolkit().sync();
+    public void gameOver( Graphics g ){
 
+        String msg = "Game over";
 
+        Font font = new Font( "Arial", Font.BOLD, 40);
+
+        g.setColor( Color.WHITE );
+        g.setFont( font );
+        g.drawString( msg , 150,200);
+
+        g.drawString( points.toString( ), 230, 250 );
     }
 
     public void checkIfPointIsTaken() {
@@ -127,6 +147,25 @@ public class Board extends JPanel implements ActionListener, Cloneable {
 
 
         if (down) bodyPoz.get(0).addY(SIZE);
+    }
+
+    public void checkColision() {
+
+        if( bodyPoz.get( 0 ).getX() > X_SIZE
+            || bodyPoz.get( 0 ).getX() < 0
+            || bodyPoz.get( 0 ).getY() > Y_SIZE
+            || bodyPoz.get( 0 ).getY() < 0 ) {
+
+            gameOver = true;
+        }
+
+        int headX = bodyPoz.get( 0 ).getX();
+        int headY = bodyPoz.get( 0 ).getY();
+
+        for( int i = 1 ; i < bodyPoz.size() ; i++ ){
+
+            if( bodyPoz.get( i ).getY() == headY && bodyPoz.get( i ).getX() == headX ) gameOver = true;
+        }
     }
 
 

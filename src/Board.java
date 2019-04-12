@@ -126,6 +126,7 @@ public class Board extends JPanel implements ActionListener, Cloneable {
 
                 isPointSpawned = false;
                 bodyPoz.add( new Position( 700, 700) );
+                points ++;
         }
     }
 
@@ -151,10 +152,10 @@ public class Board extends JPanel implements ActionListener, Cloneable {
 
     public void checkColision() {
 
-        if( bodyPoz.get( 0 ).getX() > X_SIZE
-            || bodyPoz.get( 0 ).getX() < 0
-            || bodyPoz.get( 0 ).getY() > Y_SIZE
-            || bodyPoz.get( 0 ).getY() < 0 ) {
+        if( bodyPoz.get( 0 ).getX() >= X_SIZE
+            || bodyPoz.get( 0 ).getX() <= 0
+            || bodyPoz.get( 0 ).getY() >= Y_SIZE
+            || bodyPoz.get( 0 ).getY() <= 0 ) {
 
             gameOver = true;
         }
